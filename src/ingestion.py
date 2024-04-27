@@ -1,9 +1,11 @@
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_core.documents import Document
 
+import config
 import os
 import re
 import pyarabic.araby as araby
+import pickle
 
 
 def flip_arabic_line(line):
@@ -86,14 +88,4 @@ def load_pdf(path, remove_footer=True, page_separator='\n\n\n', **kwargs):
 
     merged_pages = page_separator.join(merged_pages)
     
-    # Create a langhchain document
-    document = Document(page_content=merged_pages,
-                        metadata={"source": path,
-                                  "file_path": path})
-    
-    return document
-
-
-if __name__ == "__main__":
-
-    
+    return merged_pages
