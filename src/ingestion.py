@@ -9,9 +9,13 @@ import pyarabic.araby as araby
 def flip_arabic_line(line):
 
     def reverse_number(match):
-        # Reverse the number found
-        num = match.group(0)
-        return num[::-1]
+        # This part splits the number from its surrounding non-word characters
+        part = match.group(0)
+        # Isolate the number from commas and decimals for reversal
+        number = re.sub(r'[^\d]+', '', part)
+        reversed_number = number[::-1]
+        # Replace the original digits with the reversed digits
+        return re.sub(r'\d+', reversed_number, part, 1)
 
     line = line[::-1]
     
@@ -20,9 +24,7 @@ def flip_arabic_line(line):
 
     for word in re.split(r'(\s+)', line):
 
-        r'[^\w]*(\d+)[^\w]*'
-
-        if re.match(r'[+-]?[\d,]+(?:\.\d+)?', word):
+        if re.match(r'[^\w]*[+-]?[\d,]+(?:\.\d+)?[^\w]*', word):
             
             # Remove commas as it makes matching numbers and reversing them easier
             # This could be removed and the function that reverse numbers could 
@@ -30,7 +32,7 @@ def flip_arabic_line(line):
             number = word.replace(',', '')
 
             # Use regex to find all numbers and apply the reversing function
-            number = re.sub(r'[+-]?[0-9]+(?:\.[0-9]+)?', reverse_number, number)
+            number = re.sub(r'[^\w]*[+-]?[\d,]+(?:\.\d+)?[^\w]*', reverse_number, number)
                 
             new_line.append(number)
 
