@@ -92,3 +92,8 @@ def load_pdf(path, remove_footer=True, page_separator='\n\n\n', **kwargs):
                                   "file_path": path})
     
     return document
+
+
+if __name__ == "__main__":
+
+    
