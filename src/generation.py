@@ -27,18 +27,19 @@ LLAMA_PROMPT_TEMPLATE = """<|begin_of_text|><|start_header_id|>system<|end_heade
 
 {user_message}<|eot_id|><|start_header_id|>assistant<|end_header_id|>"""
 
-MIXTRAL_PROMPT_TEMPLATE = """"""
+MIXTRAL_PROMPT_TEMPLATE = """[INST] {system_prompt} {user_message} [/INST]"""
+
 
 load_dotenv(Path("../.env"))
 
-def get_model(model_name, temprature=0.7):
+def get_model(model_name, temprature=0.7, max_tokens=1024):
     if "gpt" in model_name:
         # TODO
         pass
     else:
         llm = Together(
             model=model_name,
-            max_tokens=1024,
+            max_tokens=max_tokens,
             temperature=temprature,
             top_p=0.7,
             top_k=50,
@@ -46,7 +47,12 @@ def get_model(model_name, temprature=0.7):
             together_api_key=os.getenv("TOGETHER_API_KEY")
         )
 
-        llm = llm.bind(stop=["<|eot_id|>"])
+        if 'mistral' in model_name:
+            stop = '</s>,[/INST]'
+        elif 'llama' in model_name:
+            stop = "<|eot_id|>"
+
+        llm = llm.bind(stop=[stop])
 
     return llm
 
