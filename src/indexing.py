@@ -2,6 +2,7 @@ from langchain_community.vectorstores import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.storage import LocalFileStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 import os
 import uuid
@@ -33,12 +34,19 @@ def get_parent_child_splits(docs, parent_chunk_size=1200, parent_chunk_overlap=4
     return parent_docs, parent_docs_ids, child_docs
 
 
-def get_multivector_retriever(chroma_client, embedding_function, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id"):
+def get_embedding_function(model_name):
+    return HuggingFaceEmbeddings(model_name=model_name)
+
+
+def get_multivector_retriever(chroma_client, embedding_model_name, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id"):
     
     # Create save directories
     os.makedirs(os.path.join(save_path), exist_ok=True)
     docstore_path = os.path.join(save_path, 'docstore', collection_name)
     vectorstore_path = os.path.join(save_path, 'chroma')
+
+    # Get embedding_function
+    embedding_function = get_embedding_function(embedding_model_name)
 
     vectorstore = Chroma(
         client=chroma_client,
@@ -66,4 +74,4 @@ def get_multivector_retriever(chroma_client, embedding_function, collection_name
             # Save the vectorstore and docstore to disk
             retriever.vectorstore.persist()
 
-    return retriever    
+    return retriever      
