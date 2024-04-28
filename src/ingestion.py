@@ -20,20 +20,25 @@ def flip_arabic_line(line):
 
     for word in re.split(r'(\s+)', line):
 
-        if re.match(r'[0-9]+(\.[0-9]+)?', word):
+        if re.search(r'[A-Za-z]+', word) or re.search(r'\d', word):
             
-            # Remove commas as it makes matching numbers and reversing them easier
-            # This could be removed and the function that reverse numbers could 
-            # be modified to account for commas
-            number = word.replace(',', '')
+            # # Remove commas as it makes matching numbers and reversing them easier
+            # # This could be removed and the function that reverse numbers could 
+            # # be modified to account for commas
+            # if '%' in word:
+            #     number = word.replace(',', '.')
+            # else:
+            #     number = word.replace(',', '')
 
-            # Use regex to find all numbers and apply the reversing function
-            number = re.sub(r'[0-9]+(\.[0-9]+)?', reverse_number, number)
+            # # Use regex to find all numbers and apply the reversing function
+            # number = re.sub(r'[0-9]+(\.[0-9]+)?', reverse_number, number)
+
+            number = word[::-1]
                 
             new_line.append(number)
 
-        elif re.search(r'[A-Za-z]+', word):
-            new_line.append(word[::-1])
+        # elif re.search(r'[A-Za-z]+', word):
+        #     new_line.append(word[::-1])
 
         else:
             new_line.append(word)
@@ -82,6 +87,9 @@ def load_pdf(path, remove_footer=True, page_separator='\n\n\n', **kwargs):
 
         # Convert all line separtors to become below page separator
         page_content = re.sub(r'\n{3,}', '\n\n', page_content)
+
+        # Remove commas
+        page_content = re.sub('،', '', page_content)
 
         # Remove footer line
         page_content = '\n'.join(l for l in page_content.strip().split('\n')[:-1])

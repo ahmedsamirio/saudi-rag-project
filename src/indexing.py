@@ -2,10 +2,15 @@ from langchain_community.vectorstores import Chroma
 from langchain.retrievers.multi_vector import MultiVectorRetriever
 from langchain.storage import LocalFileStore
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings, OpenAIEmbeddings
+
+from dotenv import load_dotenv
 
 import os
 import uuid
+
+from pathlib import Path
+import os
 
 
 def get_parent_child_splits(docs, parent_chunk_size=1200, parent_chunk_overlap=400, child_chunk_size=300, child_chunk_overlap=0, id_key="parent_doc_id"):
@@ -35,7 +40,13 @@ def get_parent_child_splits(docs, parent_chunk_size=1200, parent_chunk_overlap=4
 
 
 def get_embedding_function(model_name):
-    return HuggingFaceEmbeddings(model_name=model_name)
+
+    load_dotenv(Path("../.env"))
+
+    if "text-embedding" in model_name:
+        return OpenAIEmbeddings(model=model_name, api_key=os.getenv("OPENAI_API_KEY"))
+    else:
+        return HuggingFaceEmbeddings(model_name=model_name)
 
 
 def get_multivector_retriever(chroma_client, embedding_model_name, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id"):

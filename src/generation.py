@@ -1,5 +1,5 @@
 from langchain_together import Together
-from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
 
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
