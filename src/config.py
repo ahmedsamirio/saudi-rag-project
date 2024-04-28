@@ -1,6 +1,8 @@
-RAW_DOCS_PATH = "data/raw"
-INTERIM_DOCS_PATH = "data/interim"
-PROCESSED_DOCS_PATH = "data/processed"
+DATA_PATH = "../data"
+RAW_DOCS_PATH = "../data/raw"
+INTERIM_DOCS_PATH = "../data/interim"
+DOCSTORE_PATH = "../data/docstore"
+CHROMA_PATH = "../data/chroma"
 
 PARENT_CHUNK_SIZE = 1200
 PARENT_CHUNK_OVERLAP = 400
@@ -12,3 +14,5 @@ EMBEDDING_MODEL_NAME = 'intfloat/multilingual-e5-small'
 
 COLLECTION_NAME = f"PARENT_{PARENT_CHUNK_SIZE}_{PARENT_CHUNK_OVERLAP}_CHILD_{CHILD_CHUNK_SIZE}_{CHILD_CHUNK_OVERLAP}_{EMBEDDING_MODEL_NAME}"
 COLLECTION_NAME = COLLECTION_NAME.replace('/', '_').replace('-', '_')
+
+MODEL_NAME = "meta-llama/Llama-3-8b-chat-hf"
