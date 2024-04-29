@@ -7,6 +7,12 @@ from langchain_core.runnables import RunnablePassthrough
 from pathlib import Path
 import os
 
+ROUTER_SYSTEM_PROMPT = """Classify the following question into either \
+a question that needs a specific context to answer using a fact, \
+or a question that requires a summary. Output either "FACT" or "SUMMARY" only."""
+
+ROUTER_PROMPT = """Question: {question}"""
+
 QA_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. \
 Use the following pieces of retrieved context to answer the question. \
 If you don't know the answer, just say that you don't know. \
@@ -19,7 +25,13 @@ Use the following retrieved context to create a summary answer to the question. 
 If the context doesn't contain any relevant information, just say you don't know. \
 Answer completely in Arabic."""
 
-SUMMARY_PROMPT = """Question: {question} \nContext: {content} \nAnswer:"""
+SUMMARY_PROMPT = """Question: {question} \nContext: {contenx} \nAnswer:"""
+
+FINAL_SUMMARY_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. \
+Use the following answers to create a comprehensive summarized answer to the question. \
+Answer completely in Arabic."""
+
+FINAL_SUMMARY_PROMPT = """Question: {question} \nAnswer: {context}"""
 
 LLAMA_PROMPT_TEMPLATE = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 
@@ -69,3 +81,9 @@ def get_rag_chain(llm, retriever, format_doc_fn, prompt_template):
     )
 
     return rag_chain
+
+
+def summarize(question, retrieved_docs, summarization_chain, final_answer_chain, format_doc_fn):
+    summary_answers = summarization_chain.batch([d.page_content for d in retrieved_docs])
+    final_answer = final_answer.invoke({"question": question, "context": format_doc_fn(summary_answers)})
+    return final_answer
