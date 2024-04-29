@@ -21,17 +21,17 @@ Answer in Arabic only. Make sure to avoid repeating the question."""
 QA_PROMPT = """Question: {question} \nContext: {context}"""
 
 SUMMARY_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. \
-Use the following retrieved context to create a summary answer to the question. \
+Use the following retrieved context to answer the user query. \
 If the context doesn't contain any relevant information, just say you don't know. \
 Answer completely in Arabic."""
 
-SUMMARY_PROMPT = """Question: {question} \nContext: {context} \nAnswer:"""
+SUMMARY_PROMPT = """Query: {question} \nContext: {context} \nAnswer:"""
 
-FINAL_SUMMARY_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. \
-Use the following answers to create a comprehensive summarized answer to the question. \
-Answer completely in Arabic."""
+FINAL_SUMMARY_SYSTEM_PROMPT = """You are an expert Arabic assistant for question-answering tasks. \
+Use the following answers to create a comprehensive answer to the provided query. \
+Answer in Arabic only."""
 
-FINAL_SUMMARY_PROMPT = """Question: {question} \nAnswer: {context}"""
+FINAL_SUMMARY_PROMPT = """Query: {question} \Answers: {context}"""
 
 LLAMA_PROMPT_TEMPLATE = """<|begin_of_text|><|start_header_id|>system<|end_header_id|>
 

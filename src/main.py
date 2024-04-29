@@ -4,6 +4,8 @@ from generation import ROUTER_SYSTEM_PROMPT, ROUTER_PROMPT, QA_SYSTEM_PROMPT, QA
 from generation import get_model, format_docs, get_rag_chain, get_router_chain, summarize
 
 from langchain_core.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
 
 import chromadb
 
@@ -18,6 +20,7 @@ if __name__ == "__main__":
     # Argument parser
     parser = argparse.ArgumentParser(description="Load different models for a retrieval augmented generation.")
     parser.add_argument("--model", default="mixtral-8x22b", choices=["mixtral-8x22b", "llama-3-8b", "llama-3-70b"], help="Select the model to load")
+    parser.add_argument("--tree-summarizer", action='store_true', help="Enable tree summarization in summary questions")
     args = parser.parse_args()
 
     # Model mapping
@@ -53,6 +56,11 @@ if __name__ == "__main__":
     router_chain = get_router_chain(llm, router_prompt_template)
     rag_chain = get_rag_chain(llm, qa_retriever, format_docs, qa_prompt_template)
     summarization_chain = get_rag_chain(llm, summary_retriever, format_docs, summarization_prompt_template)
+    final_answer_chain = (
+        final_summary_template
+        | llm
+        | StrOutputParser()
+    )
 
     def get_answer(question, history):
         
@@ -60,14 +68,16 @@ if __name__ == "__main__":
         print(routing)
         if "FACT" in routing.upper():
             docs = qa_retriever.invoke(question)
-            # print(docs)
-            # for d in docs: print(d, '\n')
             answer = rag_chain.invoke(question)
         else:
-            docs = summary_retriever.invoke(question)
-            # print(docs)
-            for d in docs: print(d, '\n')
-            answer = summarization_chain.invoke(question)
+
+            if args.tree_summarizer:
+                retrieved_docs = summary_retriever.invoke(question)
+                summary_answers = summarization_chain.batch({"question": [question]*len(retrieved_docs), "context": [d.page_content for d in retrieved_docs]})
+                answer = final_answer_chain.invoke({"question": question, "context": "\n\n".join(summary_answers)})
+
+            else:
+                answer = summarization_chain.invoke(question)
 
         return answer
 

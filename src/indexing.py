@@ -40,9 +40,24 @@ def get_parent_child_splits(docs, parent_chunk_size=1200, parent_chunk_overlap=4
     return parent_docs, parent_docs_ids, child_docs
 
 @lru_cache
-def get_embedding_function(model_name):
+def get_embedding_function(collection_name):
 
     load_dotenv(Path("../.env"))
+
+    if 'text_embedding_3_large' in collection_name:
+        model_name = 'text-embedding-3-large'
+
+    elif 'text_embedding_3_small' in collection_name:
+        model_name = 'text-embedding-3-small'
+
+    elif 'text_embedding_ada_002' in collection_name:
+        model_name = 'text-embedding-ada-002'
+
+    elif 'multilingual_e5_small' in collection_name:
+        model_name = 'intfloat/multilingual-e5-small'
+
+    elif 'multilingual_e5_base' in collection_name:
+        model_name = 'intfloat/multilingual-e5-base'
 
     if "text-embedding" in model_name:
         return OpenAIEmbeddings(model=model_name, api_key=os.getenv("OPENAI_API_KEY"))
@@ -60,7 +75,7 @@ def get_multivector_retriever(chroma_client, embedding_model_name, collection_na
     print(os.path.exists(docstore_path))
 
     # Get embedding_function
-    embedding_function = get_embedding_function(embedding_model_name)
+    embedding_function = get_embedding_function(collection_name)
 
     vectorstore = Chroma(
         client=chroma_client,
