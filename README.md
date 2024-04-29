@@ -33,7 +33,7 @@ The system uses dual indexing for enhanced query matching:
 A factual index focuses on supporting queries requiring precise context, using smaller text chunks and pre-formulated questions.
 A summary index caters to broader contextual needs using summarized document representations.
 
-![indexing](images/Recursive.retrieval.drawio.png)
+![indexing](images/Recursive retrieval.drawio.png)
 
 ### Storing
 Data storage is managed using:
