@@ -25,7 +25,7 @@ Use the following retrieved context to create a summary answer to the question. 
 If the context doesn't contain any relevant information, just say you don't know. \
 Answer completely in Arabic."""
 
-SUMMARY_PROMPT = """Question: {question} \nContext: {contenx} \nAnswer:"""
+SUMMARY_PROMPT = """Question: {question} \nContext: {context} \nAnswer:"""
 
 FINAL_SUMMARY_SYSTEM_PROMPT = """You are an assistant for question-answering tasks. \
 Use the following answers to create a comprehensive summarized answer to the question. \
@@ -83,7 +83,16 @@ def get_rag_chain(llm, retriever, format_doc_fn, prompt_template):
     return rag_chain
 
 
-def summarize(question, retrieved_docs, summarization_chain, final_answer_chain, format_doc_fn):
+def get_router_chain(llm, prompt_template):
+    router_chain = (
+        prompt_template
+        | llm
+        | StrOutputParser()
+    )
+
+    return router_chain
+
+def summarize(question, retriever, summarization_chain, final_answer_chain, format_doc_fn):
     summary_answers = summarization_chain.batch([d.page_content for d in retrieved_docs])
     final_answer = final_answer.invoke({"question": question, "context": format_doc_fn(summary_answers)})
     return final_answer
