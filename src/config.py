@@ -1,10 +1,10 @@
-DATA_PATH = "../data"
-RAW_DOCS_PATH = "../data/raw"
-INTERIM_DOCS_PATH = "../data/interim"
-DOCSTORE_PATH = "../data/docstore"
-CHROMA_PATH = "../data/chroma"
+# DATA_PATH = "../data"
+# RAW_DOCS_PATH = "../data/raw"
+# INTERIM_DOCS_PATH = "../data/interim"
+# DOCSTORE_PATH = "../data/docstore"
+# CHROMA_PATH = "../data/chroma"
 
-PROD_STORAGE_PATH = "../storage/"
+PROD_STORAGE_PATH = "storage"
 
 EMBEDDING_MODEL_NAME = 'text-embedding-3-small'
 

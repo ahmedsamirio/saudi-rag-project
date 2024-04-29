@@ -8,6 +8,7 @@ from langchain_core.prompts import PromptTemplate
 import chromadb
 
 import gradio as gr
+import os
 
 
 if __name__ == "__main__":
@@ -25,20 +26,31 @@ if __name__ == "__main__":
     summarization_prompt_template = PromptTemplate.from_template(MODEL_TEMPLATE.format(system_prompt=SUMMARY_SYSTEM_PROMPT, user_message=SUMMARY_PROMPT))
     final_summary_template = PromptTemplate.from_template(MODEL_TEMPLATE.format(system_prompt=FINAL_SUMMARY_SYSTEM_PROMPT, user_message=FINAL_SUMMARY_PROMPT))
 
+    print("Loading", MODEL_NAME)
     llm = get_model(MODEL_NAME)
+
+    print("Loading Retrievers")
     qa_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, QA_COLLECTION_NAME, PROD_STORAGE_PATH)
     summary_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, SUMMARY_COLLECTION_NAME, PROD_STORAGE_PATH)
 
+
     router_chain = get_router_chain(llm, router_prompt_template)
-    rag_chain = get_rag_chain(llm, retriever, format_docs, qa_prompt_template)
-    summarization_chain = get_rag_chain(llm, retriever, format_docs, summarization_prompt_template)
+    rag_chain = get_rag_chain(llm, qa_retriever, format_docs, qa_prompt_template)
+    summarization_chain = get_rag_chain(llm, summary_retriever, format_docs, summarization_prompt_template)
 
     def get_answer(question, history):
         
         routing = router_chain.invoke(question)
+        print(routing)
         if "FACT" in routing.upper():
+            docs = qa_retriever.invoke(question)
+            # print(docs)
+            # for d in docs: print(d, '\n')
             answer = rag_chain.invoke(question)
         else:
+            docs = summary_retriever.invoke(question)
+            # print(docs)
+            for d in docs: print(d, '\n')
             answer = summarization_chain.invoke(question)
 
         return answer

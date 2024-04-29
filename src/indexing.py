@@ -53,9 +53,11 @@ def get_embedding_function(model_name):
 def get_multivector_retriever(chroma_client, embedding_model_name, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id", k=5):
     
     # Create save directories
-    os.makedirs(os.path.join(save_path), exist_ok=True)
     docstore_path = os.path.join(save_path, 'docstore', collection_name)
     vectorstore_path = os.path.join(save_path, 'chroma')
+
+    print(docstore_path)
+    print(os.path.exists(docstore_path))
 
     # Get embedding_function
     embedding_function = get_embedding_function(embedding_model_name)
