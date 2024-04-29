@@ -5,6 +5,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings, OpenAIEmbeddings
 
 from dotenv import load_dotenv
+from functools import lru_cache
 
 import os
 import uuid
@@ -38,7 +39,7 @@ def get_parent_child_splits(docs, parent_chunk_size=1200, parent_chunk_overlap=4
 
     return parent_docs, parent_docs_ids, child_docs
 
-
+@lru_cache
 def get_embedding_function(model_name):
 
     load_dotenv(Path("../.env"))
@@ -49,7 +50,7 @@ def get_embedding_function(model_name):
         return HuggingFaceEmbeddings(model_name=model_name)
 
 
-def get_multivector_retriever(chroma_client, embedding_model_name, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id"):
+def get_multivector_retriever(chroma_client, embedding_model_name, collection_name, save_path, parent_docs=[], parent_docs_ids=[], child_docs=[], id_key="parent_doc_id", k=5):
     
     # Create save directories
     os.makedirs(os.path.join(save_path), exist_ok=True)
@@ -73,6 +74,7 @@ def get_multivector_retriever(chroma_client, embedding_model_name, collection_na
         vectorstore=vectorstore,
         byte_store=store,
         id_key=id_key,
+        k=k
     )
 
     # If vectorstore isn't populated, populate and persist

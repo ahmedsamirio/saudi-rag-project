@@ -1,0 +1,20 @@
+# The ID of the dataset you created above.
+dataset: my-dataset
+
+text_completion:
+  # How the fields of the JSON dataset should be formatted into the input text.
+  input_template: "{input}"
+  
+  # How the fields of the JSON dataset should be formatted into the output text.
+  output_template: "{output}"
+
+# The Hugging Face model name of the base model.
+base_model: meta-llama/Meta-Llama-3-8B-Instruct
+
+epochs: 1.0
+
+wandb_api_key: bb5c228b18ae03e4928e0acdb300d1bc32d796a6
+wandb_project: llama3-8b-alpaca-ar-finetune
+
+model_id: llama3-8b-alpaca-ar-v1
+job_id: llama3-8b-alpaca-ar-5k-sample-v1
