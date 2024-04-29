@@ -25,17 +25,23 @@ The ingestion process begins with PDFPlumber, chosen for its ability to read PDF
 To preserve document layout and integrity:
 A recursive text splitting method is employed, with a chunk size of 1200 characters and a 400-character overlap, ensuring continuity and coherence, particularly within table structures.
 
+![splitting](images/Splitting.drawio.png)
+
 ### Indexing
 The system uses dual indexing for enhanced query matching:
 
 A factual index focuses on supporting queries requiring precise context, using smaller text chunks and pre-formulated questions.
 A summary index caters to broader contextual needs using summarized document representations.
 
+![indexing](images/Recursive.retrieval.drawio.png)
+
 ### Storing
 Data storage is managed using:
 
 - Chroma DB for storing processed text representations.
 - A key-value docstore for maintaining original documents.
+
+![indexes](images/Indexes.drawio.png)
 
 ### Querying
 Query responses are tailored based on the nature of the query:
