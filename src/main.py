@@ -30,8 +30,8 @@ if __name__ == "__main__":
     llm = get_model(MODEL_NAME)
 
     print("Loading Retrievers")
-    qa_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, QA_COLLECTION_NAME, PROD_STORAGE_PATH)
-    summary_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, SUMMARY_COLLECTION_NAME, PROD_STORAGE_PATH)
+    qa_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, QA_COLLECTION_NAME, PROD_STORAGE_PATH, k=15)
+    summary_retriever = get_multivector_retriever(persistent_client, EMBEDDING_MODEL_NAME, SUMMARY_COLLECTION_NAME, PROD_STORAGE_PATH, k=15)
 
 
     router_chain = get_router_chain(llm, router_prompt_template)
