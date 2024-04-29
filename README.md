@@ -2,7 +2,9 @@
 
 ## Setup
 
-1. All dependencies are included in the `requirements.txt` file, and you can install them using using `pip install -r requirements.txt`
+1. Clone the repository
+2. All dependencies are included in the `requirements.txt` file, and you can install them using using `pip install -r requirements.txt`
+3. Create a `.env` file and add two API keys `OPENAI_API_KEY=XXXXX` and `TOGETHER_API_KEY=XXXXX`.
 2. Once installed, you can run a simple Gradio interface using `python src/main.py` to interact with the RAG system.
 
 ## Architecture Overview
