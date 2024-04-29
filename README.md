@@ -5,7 +5,8 @@
 1. Clone the repository
 2. All dependencies are included in the `requirements.txt` file, and you can install them using using `pip install -r requirements.txt`
 3. Create a `.env` file and add two API keys `OPENAI_API_KEY=XXXXX` and `TOGETHER_API_KEY=XXXXX`.
-2. Once installed, you can run a simple Gradio interface using `python src/main.py` to interact with the RAG system.
+4. Once installed, you can run a simple Gradio interface using `python src/main.py` to interact with the RAG system.
+5. You can change the model used in the system by changing `MODEL_NAME` in `src/config.py` into one of the models mentioned in the same line.
 
 ## Architecture Overview
 ### Ingestion Pipeline
