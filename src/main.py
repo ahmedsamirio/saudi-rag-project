@@ -10,12 +10,28 @@ import chromadb
 import gradio as gr
 import os
 
+import argparse
+
 
 if __name__ == "__main__":
+
+    # Argument parser
+    parser = argparse.ArgumentParser(description="Load different models for a retrieval augmented generation.")
+    parser.add_argument("--model", default="mixtral-8x22b", choices=["mixtral-8x22b", "llama-3-8b", "llama-3-70b"], help="Select the model to load")
+    args = parser.parse_args()
+
+    # Model mapping
+    model_map = {
+        "mixtral-8x22b": "mistralai/Mixtral-8x22B-Instruct-v0.1",
+        "llama-3-8b": "meta-llama/Llama-3-8b-chat-hf",
+        "llama-3-70b":  "meta-llama/Llama-3-70b-chat-hf"
+    }
+
+    MODEL_NAME = model_map[args.model]
     
     persistent_client = chromadb.PersistentClient(path=os.path.join(PROD_STORAGE_PATH, "chroma"))
     
-    if "mixtral" in MODEL_NAME:
+    if "mistral" in MODEL_NAME:
         MODEL_TEMPLATE = MIXTRAL_PROMPT_TEMPLATE
 
     elif "llama" in MODEL_NAME:
