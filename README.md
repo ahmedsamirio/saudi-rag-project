@@ -9,6 +9,9 @@
 5. You can change the model used in the system by changing `MODEL_NAME` in `src/config.py` into one of the models mentioned in the same line.
 
 ## Architecture Overview
+
+![flow overview](images/Flow.drawio.png)
+
 ### Ingestion Pipeline
 The ingestion process begins with PDFPlumber, chosen for its ability to read PDF files line by line and parse tables effectively. Key steps include:
 
