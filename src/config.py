@@ -4,6 +4,8 @@ INTERIM_DOCS_PATH = "../data/interim"
 DOCSTORE_PATH = "../data/docstore"
 CHROMA_PATH = "../data/chroma"
 
+PROD_STORAGE_PATH = "../storage/"
+
 EMBEDDING_MODEL_NAME = 'text-embedding-3-small'
 
 COLLECTION_NAME = "PARENT_1200_400_QUESTIONS_SPLIT"
